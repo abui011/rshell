@@ -10,6 +10,7 @@ echo A && echo B || echo This shouldn't echo
 echo A || echo B && echo C
 echo A; echo B && echo C
 echo A; echo B || echo C
+echo A; echo B; echo && #this shouldn't work
 ls; ls; ls;
 ls || ls || ls
 echo A        #;echo B
