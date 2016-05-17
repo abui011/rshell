@@ -29,6 +29,7 @@ BUGS
 
 We couldn't figure out a way to output specific codes. I think we needed something
 other than perror/
+
 We made it so that # would work if it's inside quotation marks, because of this,
 it works for this example
-exampls : echo "sentence" #this still outputs
+example : echo "sentence" #this still outputs
