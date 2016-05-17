@@ -29,7 +29,7 @@ void CreateArgList(vector <int> &alist, string &s)//makes a list of arguments
 	while(st.find("&&") != string::npos || st.find("||") != string::npos
 	|| st.find(";") != string::npos) //a while loop to delete arguments
 	{
-		int i = 5000;
+		unsigned i = 5000;
 		if (st.find("||") < i)
 		{
 			i = st.find("||");
@@ -125,7 +125,7 @@ void parsethis(string test, vector <string>& real)
 	{
 		place.push_back(t); //pushback string into a vector
 	}
-	for(int i = 0; i < place.size(); ++i)
+	for(unsigned i = 0; i < place.size(); ++i)
 	{
 		counter++;
 		if(place.at(i) != "&&" && place.at(i) != "echo" && place.at(i) !=
@@ -137,7 +137,7 @@ void parsethis(string test, vector <string>& real)
 		{
 			real.push_back("echo");
 			string ex;
-			int j = i + 1;
+			unsigned j = i + 1;
 			while((j < place.size()) && (place.at(j) != "&&") && (place.at(j)
 					!= "||") && (place.at(j) != ";"))
 			{		//removing the quatation marks
@@ -170,26 +170,26 @@ void parsethis(string test, vector <string>& real)
 void colonoscopy(string &test) //we use this function to format our list guide
 {				// this basically jsut add a space before a semi
 	vector<int> destinations;
-	for(int i = 0; i < test.size(); i++)
+	for(unsigned i = 0; i < test.size(); i++)
 	{
 		if (test.at(i) == ';')
 		{
 			destinations.push_back(i);
 		}
 	}
-	for (int i = 0; i < destinations.size(); ++i)
+	for (unsigned i = 0; i < destinations.size(); ++i)
 	{
 		test.insert(test.begin() + destinations.at(i) + i, ' ');
 	}
 }
-bool letsdoit(vector<int> &aglist, vector<string> &plist) // logic function
+void letsdoit(vector<int> &aglist, vector<string> &plist) // logic function
 {
 // we set up the format as two vectors, one for arguments, and one for
 // commands and their parameters (vector of ints and one of strings)
 // from the tokenizer we set up single ls commands to have a space after
 // echos have a string after and etc
 	bool status = execute(plist.at(0), plist.at(1)); //execute first command
-	for (int i = 0; i < aglist.size(); ++i) //main goal is to go through the
+	for (unsigned i = 0; i < aglist.size(); ++i) //main goal is to go through the
 	{					//arguement list
 		if(aglist.at(i) == 1) //the && argument
 		{
@@ -230,7 +230,7 @@ bool letsdoit(vector<int> &aglist, vector<string> &plist) // logic function
 
 void deletecomments(string &input) //this deletes comments
 {
-	int i = input.find('#'); // this takes the substring of everything before the
+	unsigned i = input.find('#'); // this takes the substring of everything before the
 	if (i != 0 && i < input.size()) //"#" character if there's no '"' char before
 	{
 		if(input.at(i - 1) != 0 && i < input.find('"'))
