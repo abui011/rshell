@@ -33,3 +33,25 @@ other than perror/
 We made it so that # would work if it's inside quotation marks, because of this,
 it works for this example
 example : echo "sentence" #this still outputs
+
+
+PART 2
+------
+
+DESIGN
+------
+We worked off our previous design, to include test, we put it into the same format as our previous code. 
+we took out flags and added them to a flag list and then push backed test and the path into our parsed list. 
+In our execute we checked if the function being passed in was test, and if it was so we would go through a 
+different process instead of execvp. In doing so our code worked. For brackets, we would replace the front 
+bracket with test and delete the 2nd bracket. 
+For parentheses, we replaced the front parentheses with par and the 2nd parentheses with par2. In doing so
+we parsed it so that it would include par and stop at par2. The reason behind this was to recursively call 
+everything that was inside the parentheses. It would go through every process that a normal string without
+parentheses would have
+
+BUGS
+----
+
+We weren't able to figure out what to do if there were double parentheses. Another problem would be if our
+parentheses was at the end of the call. Ohterwise everything seems to work fine.
