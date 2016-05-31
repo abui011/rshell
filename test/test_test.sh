@@ -1,7 +1,7 @@
 [ test ] && echo A
 [ asdf ] && echo A
 [ -f test ] && echo A
-[ -f rshell.cpp ] && echo A
+[ -f assn3.cpp ] && echo A
 
 test -d test && echo A
 
