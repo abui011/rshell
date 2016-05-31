@@ -661,7 +661,6 @@ int main()
         vector <string> flist;
         deletecomments(test);
         flaggetter(test, flist);
-        cout << parsedlist.size() << endl;
         colonoscopy(test);
         parsethis(test, parsedlist);
         
