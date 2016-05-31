@@ -120,7 +120,7 @@ void CreateArgList(vector <int> &alist, string &s) // makes a list of arguments
     }
 }
 
-int test_real(string a)
+int test_real(string a) //helper function
 {
 //reg = 2
 //dir = 1
@@ -253,7 +253,7 @@ void colonoscopy(string &test) //we use this function to format our list guide
     }
 }
 
-bool execute( string ap, string ba, string flag );
+bool execute( string ap, string ba, string flag ); //to mention it previously
 
 bool letsdoit(vector<int> &aglist, vector<string> &plist, vector <string> &flist) // logic function
 {
@@ -337,18 +337,7 @@ void deletecomments(string &input) // this deletes comments
     }
 }
 
-bool check4test(vector<string> aglist)
-{
-    for (int i = 0; i < aglist.size(); i++)
-    {
-        if (aglist.at(i) == "test")
-        {
-            return true;
-        }
-    }
-    return false;
-}
-void flaggetter(string &input, vector <string> &flaglist)
+void flaggetter(string &input, vector <string> &flaglist) //gets the flags and puts them into a vector
 {
     string argm; 
 
@@ -400,7 +389,7 @@ void flaggetter(string &input, vector <string> &flaglist)
         flaglist.push_back("-e");
     }
 }
-bool brackets(string &p)
+bool brackets(string &p) //replace brackets with test
 {
     int i = 0;
     int j = 0;
@@ -444,7 +433,7 @@ bool brackets(string &p)
     }
     return true;
 }
-bool parentheses(string &p)
+bool parentheses(string &p) //finds first instances of '(' and ')'
 {
     int i = 0;
     int j = 0;
@@ -510,8 +499,10 @@ bool parentheses(string &p)
     }
     return true;
 }
+//returns true if all guidelines are followed
+//returns false if there are errors
 
-void flag_error(string check)
+void flag_error(string check) //checks for multiple flag arguments
 {
     vector<string> place;
     char_separator<char> sepspaces(" ");
@@ -535,7 +526,7 @@ void flag_error(string check)
 }
 
 
-
+// a mini version of our int main
 void mini(string &substr, vector <int> &argumentlist, vector <string> 
           &parsedlist, vector <string> &flist)
 {
@@ -613,7 +604,7 @@ bool execute( string ap, string ba, string flag )
                 return false;       //if execute fails, return false
         }
     }
-    else if (ap == "par")
+    else if (ap == "par") //changed it here, if we see a parentheses, recursively call letsdoit
     {
         vector <int> aglist;
         vector <string> plist;
