@@ -393,6 +393,14 @@ bool brackets(string &p) //replace brackets with test
 {
     int i = 0;
     int j = 0;
+    if(p.find('[') < p.size() && p.find(']') < p.size())
+    {
+        if(p.at(p.find('[') + 1) != ' ' || p.at(p.find(']') - 1) != ' ')
+        {
+            cout << "bash: command not found";
+            exit(0);
+        }
+    }
     char endp = ']';
     while(p.find('[') < p.size() || p.find(endp) < p.size())
     {
