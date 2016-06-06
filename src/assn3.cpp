@@ -31,9 +31,9 @@ void CreateArgList(vector <int> &alist, string &s) // makes a list of arguments
     while(st.find("&&") != string::npos || st.find("||") != string::npos
     || st.find(";") != string::npos) //a while loop to delete arguments
     {
-        int i = 5000;
-        int f = 0;
-        int e = 0;
+        unsigned i = 5000;
+        unsigned f = 0;
+        unsigned e = 0;
         
         if (st.find("||") < i )
         {
@@ -167,13 +167,13 @@ void parsethis(string test, vector <string>& real)
     // {
     //     cout << place.at(i) << endl;
     // }
-    for(int i = 0; i < place.size(); ++i)
+    for(unsigned i = 0; i < place.size(); ++i)
     {
         if(place.at(i) == "par")
         {
             real.push_back("par");
             string ex;
-            int j = i + 1;
+            unsigned j = i + 1;
             while((j < place.size()) && (place.at(j) != "par2"))
             {
                 ex += place.at(j) + " "; //creating the string for echo
@@ -229,7 +229,7 @@ void parsethis(string test, vector <string>& real)
         }
     }
     
-    for (int i =0; i < real.size(); ++i)
+    for (unsigned i =0; i < real.size(); ++i)
     {
         if(real.at(i) == "par2")
         {
@@ -239,15 +239,15 @@ void parsethis(string test, vector <string>& real)
 }
 void colonoscopy(string &test) //we use this function to format our list guide
 {                              //this basically just add a space before a semi
-    vector<int> destinations;
-    for (int i = 0; i < test.size(); i++)
+    vector<unsigned> destinations;
+    for (unsigned i = 0; i < test.size(); i++)
     {
         if (test.at(i) == ';')
         {
             destinations.push_back(i);
         }
     }
-    for (int i = 0; i < destinations.size(); i++)
+    for (unsigned i = 0; i < destinations.size(); i++)
     {
         test.insert(test.begin()+destinations.at(i) + i, ' ');
     }
@@ -267,7 +267,7 @@ bool letsdoit(vector<int> &aglist, vector<string> &plist, vector <string> &flist
     {
         flag.erase(flag.begin());
     }
-    for (int i = 0; i < aglist.size(); i++) // main goal is to go through the 
+    for (unsigned i = 0; i < aglist.size(); i++) // main goal is to go through the 
     {                                       // argument list
         flag = flist.at(0);
         if (aglist.at(i) == 1) //the && argument
@@ -323,7 +323,7 @@ bool letsdoit(vector<int> &aglist, vector<string> &plist, vector <string> &flist
 
 void deletecomments(string &input) // this deletes comments 
 {
-    int i = input.find('#'); // this takes the substring of everything before the
+    unsigned i = input.find('#'); // this takes the substring of everything before the
     if (i != 0 && i < input.size()) //"#" character if there's no '"' char before
     {   
         if (input.at(i-1) != 0 && i < input.find('"'))
@@ -344,7 +344,7 @@ void flaggetter(string &input, vector <string> &flaglist) //gets the flags and p
     while(input.find("-e") != string::npos || input.find("-f") != string::npos
     || input.find("-d") != string::npos) //a while loop to delete arguments
     {
-        int i = 5000;
+        unsigned i = 5000;
         
         if (input.find("-e") < i )
         {
@@ -391,8 +391,8 @@ void flaggetter(string &input, vector <string> &flaglist) //gets the flags and p
 }
 bool brackets(string &p) //replace brackets with test
 {
-    int i = 0;
-    int j = 0;
+    unsigned i = 0;
+    unsigned j = 0;
     if(p.find('[') < p.size() && p.find(']') < p.size())
     {
         if(p.at(p.find('[') + 1) != ' ' || p.at(p.find(']') - 1) != ' ')
@@ -519,7 +519,7 @@ void flag_error(string check) //checks for multiple flag arguments
     {
         place.push_back(t);         //pushback strings into a vector
     }
-    for(int i = 0; i < place.size(); ++i)
+    for(unsigned i = 0; i < place.size(); ++i)
     {
         if(place.at(i) == "-e" || place.at(i) == "-d" || place.at(i) == "-f" && i != place.size())
         {
