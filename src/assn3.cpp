@@ -223,7 +223,7 @@ void parsethis(string test, vector <string>& real)
             }
             
         }
-        if (counter == 1 && place.at(i) != "test")
+        if (counter == 1 && place.at(i) != "test" && i == place.size() - 1)
         {
             real.push_back("  ");
         }
