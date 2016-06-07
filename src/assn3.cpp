@@ -196,7 +196,7 @@ void parsethis(string test, vector <string>& real)
             {
                 real.push_back("echo");
                 string ex;
-                int j = i + 1;
+                unsigned j = i + 1;
                 while((j < place.size()) && (place.at(j) != "&&") && (place.at(j) 
                             != "||") && (place.at(j) != ";"))
                 {
@@ -419,7 +419,7 @@ bool brackets(string &p) //replace brackets with test
             cout << "bash: syntax error near unexpected token" << endl;
             return false;
         }
-        for (int z = i+1; z < j; z++)
+        for (unsigned z = i+1; z < j; z++)
         {
             if(p.at(z) != ' ')
             {
@@ -449,8 +449,8 @@ bool brackets(string &p) //replace brackets with test
 }
 bool parentheses(string &p) //finds first instances of '(' and ')'
 {
-    int i = 0;
-    int j = 0;
+    unsigned i = 0;
+    unsigned j = 0;
     char endp = ')';
     while(p.find('(') < p.size() || p.find(endp) < p.size())
     {
@@ -463,7 +463,7 @@ bool parentheses(string &p) //finds first instances of '(' and ')'
             cout << "bash: syntax error near unexpected token" << endl;
             return false;
         }
-        for (int z = i+1; z < j; z++)
+        for (unsigned z = i+1; z < j; z++)
         {
             if(p.at(z) != ' ')
             {
@@ -528,7 +528,7 @@ void flag_error(string check) //checks for multiple flag arguments
     }
     for(unsigned i = 0; i < place.size(); ++i)
     {
-        if(place.at(i) == "-e" || place.at(i) == "-d" || place.at(i) == "-f" && i != place.size())
+        if((place.at(i) == "-e") || (place.at(i) == "-d") || (place.at(i) == "-f") && (i != place.size()))
         {
             if(place.at(i + 1).at(0) == '-')
             {
