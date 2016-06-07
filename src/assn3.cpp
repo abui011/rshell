@@ -136,6 +136,7 @@ int test_real(string a) //helper function
     case S_IFREG:  return 2;                            break;
     default:       printf("unknown?\n");                break;
     }
+  return 0;
 }
 bool test_main(string b, string flag)  // pass string and flag
 {                                      // return true or false if the test is
@@ -528,7 +529,7 @@ void flag_error(string check) //checks for multiple flag arguments
     }
     for(unsigned i = 0; i < place.size(); ++i)
     {
-        if((place.at(i) == "-e") || (place.at(i) == "-d") || (place.at(i) == "-f") && (i != place.size()))
+        if((place.at(i) == "-e") (||) (place.at(i) == "-d") (||) (place.at(i) == "-f") (&&) (i != place.size()))
         {
             if(place.at(i + 1).at(0) == '-')
             {
