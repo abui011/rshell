@@ -529,7 +529,7 @@ void flag_error(string check) //checks for multiple flag arguments
     }
     for(unsigned i = 0; i < place.size(); ++i)
     {
-        if((place.at(i) == "-e") (||) (place.at(i) == "-d") (||) (place.at(i) == "-f") (&&) (i != place.size()))
+        if(((place.at(i) == "-e") || (place.at(i) == "-d") (||) (place.at(i) == "-f"))&& (i != place.size()))
         {
             if(place.at(i + 1).at(0) == '-')
             {
