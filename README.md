@@ -55,3 +55,20 @@ BUGS
 
 We weren't able to figure out what to do if there were double parentheses. Another problem would be if our
 parentheses was at the end of the call. Ohterwise everything seems to work fine.
+
+Part 3
+-------
+
+DESIGN
+------
+We worked off our previous design to include redirection, appending and piping. We will accomplish this by 
+changing the folder descriptors using dup and writing into the redirected files and the cat command will be
+handeled with execvp. We will be working off our previous code and will be updating the the parsing system
+to take into account of '>', '<', ">>", and '|'.
+
+
+BUGS
+----
+
+Our program does do piping correctly, another issue is that our program does not append correctly as well.
+The translate command (tr) also does not work correctly in our program.
