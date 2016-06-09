@@ -199,7 +199,7 @@ void parsethis(string test, vector <string>& real)
             {
                 real.push_back("echo");
                 string ex;
-                int j = i + 1;
+                unsigned j = i + 1;
                 while((j < place.size()) && (place.at(j) != "&&") && (place.at(j) 
                             != "||") && (place.at(j) != ";")
                             && place.at(j) != "<" && place.at(j) != ">" && 
@@ -414,7 +414,7 @@ bool brackets(string &p) //replace brackets with test
             cout << "bash: syntax error near unexpected token" << endl;
             return false;
         }
-        for (int z = i+1; z < j; z++)
+        for (unsigned z = i+1; z < j; z++)
         {
             if(p.at(z) != ' ')
             {
@@ -444,8 +444,8 @@ bool brackets(string &p) //replace brackets with test
 }
 bool parentheses(string &p) //finds first instances of '(' and ')'
 {
-    int i = 0;
-    int j = 0;
+    unsigned i = 0;
+    unsigned j = 0;
     char endp = ')';
     while(p.find('(') < p.size() || p.find(endp) < p.size())
     {
@@ -457,7 +457,7 @@ bool parentheses(string &p) //finds first instances of '(' and ')'
             cout << "bash: syntax error near unexpected token" << endl;
             return false;
         }
-        for (int z = i+1; z < j; z++)
+        for (unsigned z = i+1; z < j; z++)
         {
             if(p.at(z) != ' ')
             {
@@ -510,9 +510,7 @@ bool parentheses(string &p) //finds first instances of '(' and ')'
 
 void directors(string &p) //finds first instances of '(' and ')'
 {
-    char endp = '>';
-        bool check = false;
-        int i = p.find('<');
+        unsigned i = p.find('<');
         if (i < p.size())
         {
             if (i != p.size() -1)
@@ -524,7 +522,7 @@ void directors(string &p) //finds first instances of '(' and ')'
             }
         }
         
-        int j = p.find('>');
+        unsigned j = p.find('>');
         if (j < p.size())
         {
             if (j != p.size() - 1)
@@ -555,7 +553,7 @@ void flag_error(string check) //checks for multiple flag arguments
     }
     for(unsigned i = 0; i < place.size(); ++i)
     {
-        if(place.at(i) == "-e" || place.at(i) == "-d" || place.at(i) == "-f" && i != place.size())
+        if((place.at(i) == "-e" || place.at(i) == "-d" || place.at(i) == "-f") && i != place.size())
         {
             if(place.at(i + 1).at(0) == '-')
             {
@@ -674,7 +672,7 @@ bool execute( string ap, string ba, string flag )
 
 bool dmode (vector <string> clist)
 {
-    for (int i = 0; i < clist.size(); i++)
+    for (unsigned i = 0; i < clist.size(); i++)
     {
         if (clist.at(i) == "<" || clist.at(i) == ">" || clist.at(i) == "|")
         {
@@ -695,6 +693,7 @@ bool readdup (string p)
     dup2(n, 0);
     stdout = fdopen(n, "w");
     close(n);
+    return true;
    
 }
 
@@ -709,6 +708,7 @@ bool writedup (string p)
     dup2(n, 1);
     close(n);
     stdout = fdopen(n, "w");
+    return true;
 }
 
 void checkempty(vector <string> &p)
@@ -730,7 +730,7 @@ void dexecute (vector <string> & plist)
     int saved_stdin;
     saved_stdin = dup(0);
     saved_stdout = dup(1);
-    for (int i = 0; i < plist.size(); i++)
+    for (unsigned i = 0; i < plist.size(); i++)
     {
         // cout << endl;
         // for(int j = 0; j < plist.size(); j++)
