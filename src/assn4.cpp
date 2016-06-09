@@ -511,8 +511,8 @@ bool parentheses(string &p) //finds first instances of '(' and ')'
 void directors(string &p) //finds first instances of '(' and ')'
 {
         unsigned i = p.find('<');
-        if (i < p.size())
-        {
+        if (i < p.size())//checks for '<',if i is > p.size()
+        {                // then '<' has not been found.
             if (i != p.size() -1)
             {
                 p.erase(p.begin()+i);
@@ -523,8 +523,8 @@ void directors(string &p) //finds first instances of '(' and ')'
         }
         
         unsigned j = p.find('>');
-        if (j < p.size())
-        {
+        if (j < p.size())//if j > p.size() then 
+        {                // '>' is not found.
             if (j != p.size() - 1)
             { 
                 p.erase(p.begin()+j);
@@ -670,27 +670,27 @@ bool execute( string ap, string ba, string flag )
     }
 }
 
-bool dmode (vector <string> clist)
-{
+bool dmode (vector <string> clist)//checks the parsed list if there is any
+{                                 //redirection or pipe
     for (unsigned i = 0; i < clist.size(); i++)
     {
         if (clist.at(i) == "<" || clist.at(i) == ">" || clist.at(i) == "|")
         {
-            return true;
+            return true;//if call of redirection or pipe is found then return true
         }
     }
-    return false;
+    return false;//return false user input does not use redirection or pipe
 }
 
 bool readdup (string p)
 {
     string flag = "no flag";
-    if (execute("test", p, "-d") == true)
-    {
+    if (execute("test", p, "-d") == true) //checks if path is a directory
+    {                                      //or a file.
         return false;
     }
     int n = open(p.c_str(), O_RDONLY);
-    dup2(n, 0);
+    dup2(n, 0);// creates a copy of the file descriptor
     stdout = fdopen(n, "w");
     close(n);
     return true;
@@ -699,19 +699,19 @@ bool readdup (string p)
 
 bool writedup (string p)
 {
-    if (execute("test", p, "-d") == true)
-    {
+    if (execute("test", p, "-d") == true)//checks if path is a file
+    {                                      // or a directory.
         return false;
     }
     int n = open(p.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP 
                  | S_IWGRP | S_IWUSR);
-    dup2(n, 1);
+    dup2(n, 1);//creates a copy of the file descriptor
     close(n);
     stdout = fdopen(n, "w");
     return true;
 }
 
-void checkempty(vector <string> &p)
+void checkempty(vector <string> &p)//checks if the vector is empty
 {
     if (p.size() == 0)
     {
@@ -719,7 +719,7 @@ void checkempty(vector <string> &p)
     }
 }
 
-void dexecute (vector <string> & plist)
+void dexecute (vector <string> & plist)//execute the redirection
 {
     string flag = "no flag";
     string a = "nothing";
@@ -737,11 +737,8 @@ void dexecute (vector <string> & plist)
         // {
         //     cout << plist.at(j) << endl;
         // }
-        if (plist.at(i) == "<")
+        if (plist.at(i) == "<")//execute the '<' redirection
         {
-            cout << i;
-            cout << plist.at(0);
-            cout << plist.at(1);
             if(i == 0)
             {
                 readdup(plist.at(i+1));
@@ -778,7 +775,7 @@ void dexecute (vector <string> & plist)
                 i = 0;
             }
         }
-        if (plist.at(i) == ">")
+        if (plist.at(i) == ">")// execture the '>' redirection
         {
             if(i == 0)
             {
@@ -816,7 +813,7 @@ void dexecute (vector <string> & plist)
                 }
             }
         }
-        if (plist.at(i) == "|")
+        if (plist.at(i) == "|")//execute the pipe
         {
         }
         if (a != "nothing" || b != "yet")
@@ -827,7 +824,7 @@ void dexecute (vector <string> & plist)
     dup2(saved_stdout,1);
     close(saved_stdout);
     dup2(saved_stdin,0);
-    close(saved_stdin);
+    close(saved_stdin);//properly closing
     
 }
 
