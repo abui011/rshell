@@ -1,10 +1,16 @@
 #include <iostream>
-#include <cstring>
 #include <string>
+#include <cstring>
+#include <unistd.h>
+#include <string>
+#include <iostream>
 #include <vector>
+#include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
+#include <fcntl.h>
+#include <algorithm>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
@@ -15,7 +21,6 @@
 #include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 #include <sys/stat.h>
-
 using namespace std;
 using namespace boost;
 
@@ -136,7 +141,7 @@ int test_real(string a) //helper function
     case S_IFREG:  return 2;                            break;
     default:       printf("unknown?\n");                break;
     }
-  return 0;
+    return 0;
 }
 bool test_main(string b, string flag)  // pass string and flag
 {                                      // return true or false if the test is
@@ -155,7 +160,6 @@ void parsethis(string test, vector <string>& real)
 // parses through the command, first by breaking up with tokenizer and then
 // pushing back each individual string into a vector to be easily processed
 {
-    int counter = 0;
     vector<string> place;
     char_separator<char> sepspaces(" ");
                      //tokenizer used to split up string into smaller strings
@@ -183,11 +187,9 @@ void parsethis(string test, vector <string>& real)
             }
             ++i;
             real.push_back(ex);
-            counter = 0;
         }
         else
         {
-            counter++;
             if(place.at(i) != "&&" && place.at(i) != "echo" && place.at(i) != 
                     "||" && place.at(i) != ";")
             {
@@ -197,9 +199,11 @@ void parsethis(string test, vector <string>& real)
             {
                 real.push_back("echo");
                 string ex;
-                unsigned j = i + 1;
+                int j = i + 1;
                 while((j < place.size()) && (place.at(j) != "&&") && (place.at(j) 
-                            != "||") && (place.at(j) != ";"))
+                            != "||") && (place.at(j) != ";")
+                            && place.at(j) != "<" && place.at(j) != ">" && 
+                            place.at(j) != "|")
                 {
                                             //removing the quation marks
                     while(place.at(j).find('\"') < place.at(j).size())
@@ -211,16 +215,6 @@ void parsethis(string test, vector <string>& real)
                     ++i;
                 }
                 real.push_back(ex);
-                counter = 0;
-            }
-            else if (place.at(i) == "&&" || place.at(i) == "||" || 
-                        place.at(i) == ";")
-            {
-                if (counter == 2)
-                {
-                    real.push_back("  ");
-                }
-                counter = 0;
             }
             
         }
@@ -420,7 +414,7 @@ bool brackets(string &p) //replace brackets with test
             cout << "bash: syntax error near unexpected token" << endl;
             return false;
         }
-        for (unsigned z = i+1; z < j; z++)
+        for (int z = i+1; z < j; z++)
         {
             if(p.at(z) != ' ')
             {
@@ -450,8 +444,8 @@ bool brackets(string &p) //replace brackets with test
 }
 bool parentheses(string &p) //finds first instances of '(' and ')'
 {
-    unsigned i = 0;
-    unsigned j = 0;
+    int i = 0;
+    int j = 0;
     char endp = ')';
     while(p.find('(') < p.size() || p.find(endp) < p.size())
     {
@@ -460,11 +454,10 @@ bool parentheses(string &p) //finds first instances of '(' and ')'
         j = p.find(')');
         if (j < i)
         {
-            cout << "this one";
             cout << "bash: syntax error near unexpected token" << endl;
             return false;
         }
-        for (unsigned z = i+1; z < j; z++)
+        for (int z = i+1; z < j; z++)
         {
             if(p.at(z) != ' ')
             {
@@ -474,13 +467,11 @@ bool parentheses(string &p) //finds first instances of '(' and ')'
         }
         if (check == false)
         {
-            cout << "no this ne;";
             cout << "bash: syntax error near unexpected token" << endl;
             return false;
         }
         if (j > p.size())
         {
-            cout << "actually this";
             cout << "bash: syntax error near unexpected token" << endl;
             return false;
         }
@@ -517,6 +508,41 @@ bool parentheses(string &p) //finds first instances of '(' and ')'
 //returns true if all guidelines are followed
 //returns false if there are errors
 
+void directors(string &p) //finds first instances of '(' and ')'
+{
+    char endp = '>';
+        bool check = false;
+        int i = p.find('<');
+        if (i < p.size())
+        {
+            if (i != p.size() -1)
+            {
+                p.erase(p.begin()+i);
+                p.insert(p.begin()+i, ' ');
+                p.insert(p.begin()+i, '<');
+                p.insert(p.begin()+i, ' ');
+            }
+        }
+        
+        int j = p.find('>');
+        if (j < p.size())
+        {
+            if (j != p.size() - 1)
+            { 
+                p.erase(p.begin()+j);
+                p.insert(p.begin()+j, ' ');
+                p.insert(p.begin()+j, '>');
+                p.insert(p.begin()+j, ' ');
+            }
+            else
+            {
+                p.push_back(' ');
+                p.push_back('>');
+                p.push_back(' ');
+            }
+        }
+}
+
 void flag_error(string check) //checks for multiple flag arguments
 {
     vector<string> place;
@@ -529,7 +555,7 @@ void flag_error(string check) //checks for multiple flag arguments
     }
     for(unsigned i = 0; i < place.size(); ++i)
     {
-        if(((place.at(i) == "-e") || (place.at(i) == "-d") || (place.at(i) == "-f"))&& (i != place.size()))
+        if(place.at(i) == "-e" || place.at(i) == "-d" || place.at(i) == "-f" && i != place.size())
         {
             if(place.at(i + 1).at(0) == '-')
             {
@@ -567,7 +593,6 @@ void mini(string &substr, vector <int> &argumentlist, vector <string>
     }
     if (argumentlist.size() != size/2 - 1) // checks for double args
     {
-        cout << "that one";
         cout << "bash: syntax error near unexpected token" << endl;
     }
 }
@@ -642,11 +667,170 @@ bool execute( string ap, string ba, string flag )
         }
         else
         {
-            cout << "(False)\n";
             return false;
         }
     }
 }
+
+bool dmode (vector <string> clist)
+{
+    for (int i = 0; i < clist.size(); i++)
+    {
+        if (clist.at(i) == "<" || clist.at(i) == ">" || clist.at(i) == "|")
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool readdup (string p)
+{
+    string flag = "no flag";
+    if (execute("test", p, "-d") == true)
+    {
+        return false;
+    }
+    int n = open(p.c_str(), O_RDONLY);
+    dup2(n, 0);
+    stdout = fdopen(n, "w");
+    close(n);
+   
+}
+
+bool writedup (string p)
+{
+    if (execute("test", p, "-d") == true)
+    {
+        return false;
+    }
+    int n = open(p.c_str(), O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP 
+                 | S_IWGRP | S_IWUSR);
+    dup2(n, 1);
+    close(n);
+    stdout = fdopen(n, "w");
+}
+
+void checkempty(vector <string> &p)
+{
+    if (p.size() == 0)
+    {
+        p.push_back("end");
+    }
+}
+
+void dexecute (vector <string> & plist)
+{
+    string flag = "no flag";
+    string a = "nothing";
+    string b = "yet";
+    string catend;
+    string catend2;
+    int saved_stdout;
+    int saved_stdin;
+    saved_stdin = dup(0);
+    saved_stdout = dup(1);
+    for (int i = 0; i < plist.size(); i++)
+    {
+        // cout << endl;
+        // for(int j = 0; j < plist.size(); j++)
+        // {
+        //     cout << plist.at(j) << endl;
+        // }
+        if (plist.at(i) == "<")
+        {
+            cout << i;
+            cout << plist.at(0);
+            cout << plist.at(1);
+            if(i == 0)
+            {
+                readdup(plist.at(i+1));
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                checkempty(plist);
+                i = 0;
+            }
+            if(i == 2)
+            {
+                readdup(plist.at(i+1));
+                a = plist.at(0);
+                b = plist.at(1);
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                checkempty(plist);
+                i = 0;
+
+            }
+            if(i == 1)
+            {
+                if(plist.at(0) == "cat")
+                {
+                    catend = plist.at(0);
+                    readdup(plist.at(i+1));
+                    catend2 = plist.at(plist.size()-1);
+                }
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                checkempty(plist);
+                i = 0;
+            }
+        }
+        if (plist.at(i) == ">")
+        {
+            if(i == 0)
+            {
+                writedup(plist.at(i+1));
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                checkempty(plist);
+                i = 0;
+            }
+            if(i == 2)
+            {
+                writedup(plist.at(i+1));
+                a = plist.at(0);
+                b = plist.at(1);
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                plist.erase(plist.begin());
+                checkempty(plist);
+                i = 0;
+                
+            }
+            if(i == 1)
+            {
+                if(plist.at(0) == "cat")
+                {
+                    catend = plist.at(0);
+                    writedup(plist.at(i+1));
+                    catend2 = plist.at(plist.size()-1);
+                    plist.erase(plist.begin());
+                    plist.erase(plist.begin());
+                    plist.erase(plist.begin());
+                    checkempty(plist);
+                    i = 0;
+                }
+            }
+        }
+        if (plist.at(i) == "|")
+        {
+        }
+        if (a != "nothing" || b != "yet")
+        {
+            execute(a,b,flag);
+        }
+    }
+    dup2(saved_stdout,1);
+    close(saved_stdout);
+    dup2(saved_stdin,0);
+    close(saved_stdin);
+    
+}
+
 
 int main()
 {
@@ -672,12 +856,14 @@ int main()
             exit(0);
         if (brackets(test) == false)
             exit(0);
+        directors(test);
         vector <string> parsedlist;
         vector <string> flist;
         deletecomments(test);
         flaggetter(test, flist);
         colonoscopy(test);
         parsethis(test, parsedlist);
+        bool d = dmode(parsedlist);
         
         // for (int i = 0; i < argumentlist.size(); i++)
         // {
@@ -697,13 +883,17 @@ int main()
                 argumentlist.pop_back();
             }
         }
-        if (argumentlist.size() != size/2 - 1) // checks for double args
+        if (argumentlist.size() != size/2 - 1 && d == false) // checks for double args
         {
             cout << "bash: syntax error near unexpected token" << endl;
         }
-        else
+        else if (d == false)
         {
             letsdoit(argumentlist, parsedlist, flist);
+        }
+        else
+        {
+            dexecute(parsedlist);
         }
     }
     return 0;
